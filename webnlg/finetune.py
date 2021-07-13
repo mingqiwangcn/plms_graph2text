@@ -301,8 +301,12 @@ class SummarizationModule(BaseTransformer):
                     f"{prefix}_loss" + "_" + dataset_name: loss,
                     f"{prefix}_{self.val_metric}" + "_" + dataset_name: metric_tensor,
                 })
-            return data_logs
 
+            data_logs = {
+                "preds" + "_" + dataset_name: ['test_unseen_predictions.txt.debug']
+            }
+
+            return data_logs
 
         #######
 
@@ -375,7 +379,8 @@ class SummarizationModule(BaseTransformer):
                     t_writer.writelines(convert_text(s) + "\n" for s in output_batch["target"])
                 p_writer.close()
                 t_writer.close()
-
+            
+            '''
             bleu_info = eval_bleu(self.hparams.data_dir, output_test_predictions_file, dataset_name)
             meteor_info = eval_meteor_test_webnlg(self.hparams.data_dir, output_test_predictions_file, dataset_name)
             chrf_info = eval_chrf_test_webnlg(self.hparams.data_dir, output_test_predictions_file, dataset_name)
@@ -385,6 +390,8 @@ class SummarizationModule(BaseTransformer):
             rank_zero_info(" %s - chrf_info: %s", dataset_name, chrf_info)
 
             outputs[0]['bleu'] = bleu_info
+            '''
+            outputs[0]['bleu'] = -1
 
         return self.validation_epoch_end(outputs_all_testsets, prefix="test")
 

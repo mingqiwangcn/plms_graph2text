@@ -106,7 +106,7 @@ class BaseTransformer(pl.LightningModule):
             for idx, t in enumerate(new_tokens):
                 new_tokens_vocab['additional_special_tokens'].append(t)
             num_added_toks = self.tokenizer.add_special_tokens(new_tokens_vocab)
-            rank_zero_info('We have added %s tokens', num_added_toks)
+            #rank_zero_info('We have added %s tokens', num_added_toks)
         else:
             self.tokenizer: PreTrainedTokenizer = tokenizer
         self.model_type = MODEL_MODES[mode]

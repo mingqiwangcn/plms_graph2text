@@ -547,7 +547,7 @@ class Graph2TextModule(SummarizationModule):
 
         self.hparams = hparams
 
-        rank_zero_info("parameters %s", hparams)
+        #rank_zero_info("parameters %s", hparams)
 
     def calc_generative_metrics(self, preds, target) -> dict:
         return calculate_bleu(preds, target)
@@ -616,7 +616,7 @@ def main(args, model=None) -> SummarizationModule:
         if args.do_predict and not args.do_train:
 
             checkpoint = checkpoints[-1]
-            print(checkpoint)
+            #print(checkpoint)
             #trainer.test(ckpt_path=checkpoints[-1])
             trainer.test(model, ckpt_path=checkpoint)
             return model

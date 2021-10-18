@@ -43,8 +43,8 @@ class Seq2SeqLoggingCallback(pl.Callback):
                     break
             if ver:
                 new_metrics[k] = v
-
-        print(new_metrics)
+        if len(new_metrics) > 0:
+            print(new_metrics)
         trainer.logger.log_metrics(new_metrics)
         # Log results
         od = Path(pl_module.hparams.output_dir)

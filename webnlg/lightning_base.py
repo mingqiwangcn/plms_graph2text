@@ -365,6 +365,7 @@ def generic_train(
     extra_callbacks=[],
     checkpoint_callback=None,
     logging_callback=None,
+    show_progress_bar=1,
     **extra_train_kwargs
 ):
     pl.seed_everything(args.seed)
@@ -381,7 +382,7 @@ def generic_train(
     if logging_callback is None:
         logging_callback = LoggingCallback()
 
-    train_params = {}
+    train_params = {'progress_bar_refresh_rate':show_progress_bar}
 
     # TODO: remove with PyTorch 1.6 since pl uses native amp
     if args.fp16:

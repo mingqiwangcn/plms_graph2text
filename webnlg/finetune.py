@@ -303,7 +303,7 @@ class SummarizationModule(BaseTransformer):
                 })
 
             data_logs = {
-                "preds" + "_" + dataset_name: ['test_unseen_predictions.txt.debug']
+                #"preds" + "_" + dataset_name: ['test_unseen_predictions.txt.debug']
             }
 
             return data_logs
@@ -517,6 +517,7 @@ class SummarizationModule(BaseTransformer):
             required=False,
             help="-1 means never early stop. early_stopping_patience is measured in validation checks, not epochs. So val_check_interval will effect it.",
         )
+        parser.add_argument("--show_progress_bar", type=int, default=1)
 
         return parser
 
@@ -598,6 +599,7 @@ def main(args, model=None) -> SummarizationModule:
         ),
         early_stopping_callback=es_callback,
         logger=logger,
+        show_progress_bar=args.show_progress_bar
     )
     pickle_save(model.hparams, model.output_dir / "hparams.pkl")
     if not args.do_predict:

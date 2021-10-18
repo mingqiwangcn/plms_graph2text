@@ -147,7 +147,6 @@ webnlg/outputs/
 amr/data/
 agenda/data/
 webnlg/data/
-transformers/
 
 *.pt
 

@@ -1186,6 +1186,7 @@ class AlbertForQuestionAnswering(AlbertPreTrainedModel):
         )
 
         sequence_output = outputs[0]
+        self.last_hidden_state = sequence_output
 
         logits = self.qa_outputs(sequence_output)
         start_logits, end_logits = logits.split(1, dim=-1)

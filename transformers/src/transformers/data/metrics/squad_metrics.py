@@ -240,7 +240,7 @@ def squad_evaluate(examples, preds, no_answer_probs=None, no_answer_probability_
     return evaluation
 
 
-def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
+def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False, opt_info=None):
     """Project the tokenized prediction back to the original text."""
 
     # When we created the data, we kept track of the alignment between original
@@ -329,6 +329,10 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
         if verbose_logging:
             logger.info("Couldn't map end position")
         return orig_text
+
+    if opt_info is not None:
+        opt_info['char_start_pos'] = orig_start_position
+        opt_info['char_end_pos'] = orig_end_position
 
     output_text = orig_text[orig_start_position : (orig_end_position + 1)]
     return output_text

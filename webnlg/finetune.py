@@ -343,7 +343,21 @@ class SummarizationModule(BaseTransformer):
         return base_metrics
 
     def test_step(self, batch, batch_idx, dataloader_idx):
-        return self._generative_step(batch, batch_idx, dataloader_idx)
+        t1 = time.time()
+        result = self._generative_step(batch, batch_idx, dataloader_idx)
+        t2 = time.time()
+        used_t = t2 - t1 
+        if (dataloader_idx == 2) and (self.hparams.table_log_info is not None): 
+            table_log_info = self.hparams.table_log_info 
+            table_log_info['used_t_lst'].append(
+                {
+                    'table_code':table_log_info['table_code'],
+                    'component':'Graph2text test generate by batch %d' % batch_idx,
+                    'seconds':used_t
+                }
+            )
+
+        return result
 
     def test_epoch_end(self, outputs_all_testsets):
 
@@ -555,6 +569,9 @@ class Graph2TextModule(SummarizationModule):
 
 
 def main(args, model=None) -> SummarizationModule:
+    
+    t1 = time.time()
+
     Path(args.output_dir).mkdir(exist_ok=True)
     if len(os.listdir(args.output_dir)) > 3 and args.do_train:
         raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
@@ -617,10 +634,37 @@ def main(args, model=None) -> SummarizationModule:
 
         if args.do_predict and not args.do_train:
 
+            t2 = time.time()
+            used_t = t2 - t1
+            
+            if args.table_log_info is not None:
+                args.table_log_info['used_t_lst'].append(
+                    {
+                        'table_code':args.table_log_info['table_code'],
+                        'component':'Graph2text before test',
+                        'seconds':used_t
+                    }
+                )
+            
             checkpoint = checkpoints[-1]
             #print(checkpoint)
             #trainer.test(ckpt_path=checkpoints[-1])
+
+            t1 = time.time()
             trainer.test(model, ckpt_path=checkpoint)
+            t2 = time.time()
+
+            used_t = t2 - t1
+            
+            if args.table_log_info is not None:
+                args.table_log_info['used_t_lst'].append(
+                    {
+                        'table_code':args.table_log_info['table_code'],
+                        'component':'Graph2text test',
+                        'seconds':used_t
+                    }
+                )
+
             return model
 
 

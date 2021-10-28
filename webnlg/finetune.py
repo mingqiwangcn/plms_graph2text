@@ -347,7 +347,7 @@ class SummarizationModule(BaseTransformer):
         result = self._generative_step(batch, batch_idx, dataloader_idx)
         t2 = time.time()
         used_t = t2 - t1 
-        if (dataloader_idx == 2) and (self.hparams.table_log_info is not None): 
+        if (dataloader_idx == 2) and (hasattr(self.hparams, 'table_log_info')): 
             table_log_info = self.hparams.table_log_info 
             table_log_info['used_t_lst'].append(
                 {
@@ -637,7 +637,7 @@ def main(args, model=None) -> SummarizationModule:
             t2 = time.time()
             used_t = t2 - t1
             
-            if args.table_log_info is not None:
+            if hasattr(args, 'table_log_info'): 
                 args.table_log_info['used_t_lst'].append(
                     {
                         'table_code':args.table_log_info['table_code'],
@@ -656,7 +656,7 @@ def main(args, model=None) -> SummarizationModule:
 
             used_t = t2 - t1
             
-            if args.table_log_info is not None:
+            if hasattr(args, 'table_log_info'): 
                 args.table_log_info['used_t_lst'].append(
                     {
                         'table_code':args.table_log_info['table_code'],

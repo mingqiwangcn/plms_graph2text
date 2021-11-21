@@ -32,15 +32,12 @@ def get_nodes(n):
     n = n.replace('(', '')
     n = n.replace('\"', '')
     n = n.replace(')', '')
-    #n = n.replace(',', ' ')
+    #n = n.replace(',', ' , ')
     n = n.replace('_', ' ')
-
     #n = ' '.join(re.split('(\W)', n))
     n = unidecode.unidecode(n)
     #n = n.lower()
-
     return n
-
 
 def get_relation(n):
     n = n.replace('(', '')
@@ -51,9 +48,12 @@ def get_relation(n):
     return n
 
 def text_preprocess(text):
-    doc = nlp(text)
+    text_1 = text.replace(',', ' , ')
+    tokens = text_1.split()
+    input_text = ' '.join(tokens)
+    doc = nlp(input_text)
     new_text = ' '.join([a.text for a in doc])
-    return new_text 
+    return new_text
 
 def process_triples(mtriples):
     rel_triple_lst = [] 
@@ -230,8 +230,19 @@ def fuzzy_match_entity(ent_text, target_text):
         span_len = len(new_ent_text)
     else:
         #ratio = fuzz.partial_ratio(ent_text, target_text)
-        target_token_lst = target_text.split()
         ent_token_lst = ent_text.split()
+        if ',' in ent_token_lst:
+            updated_ent_text_1 = ent_text.replace(',', ' ')
+            updated_tokens = updated_ent_text_1.split()
+            updated_ent_text_2 = ' '.join(updated_tokens)
+            idx = target_text.find(updated_ent_text_2)
+            if idx > -1:
+                span_len = len(updated_ent_text_2)  
+                return idx, span_len
+
+            ent_token_lst = updated_ent_text_2.split()
+
+        target_token_lst = target_text.split()
         M = len(ent_token_lst)
         for pos in range(0, len(target_token_lst), M):
             sub_target_text = ' '.join(target_token_lst[pos:(pos+M)])

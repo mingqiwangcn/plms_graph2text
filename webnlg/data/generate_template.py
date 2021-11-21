@@ -34,6 +34,7 @@ def get_nodes(n):
     n = n.replace(')', '')
     #n = n.replace(',', ' , ')
     n = n.replace('_', ' ')
+    n = n.replace('-', ' ')
     #n = ' '.join(re.split('(\W)', n))
     n = unidecode.unidecode(n)
     #n = n.lower()
@@ -47,8 +48,29 @@ def get_relation(n):
     n = "_".join(n)
     return n
 
+def process_comma(text):
+    char_array = [] 
+    for idx, ch in enumerate(text):
+        if ch == ',':
+            if text[idx - 1].isdigit() and text[idx + 1].isdigit():
+                continue
+            else:
+                char_array.append(' ')
+                char_array.append(',')
+                char_array.append(' ')
+        else:
+            char_array.append(ch)
+
+    text_2 = ''.join(char_array)
+
+    return text_2
+
 def text_preprocess(text):
-    text_1 = text.replace(',', ' , ')
+    text_1 = process_comma(text)
+
+    text_1 = text_1.replace('(', ' ')
+    text_1 = text_1.replace(')', ' ')
+
     tokens = text_1.split()
     input_text = ' '.join(tokens)
     doc = nlp(input_text)
@@ -156,6 +178,7 @@ def get_data_dev_test(file_, train_cat, dataset):
 
         lexs = e.getElementsByTagName('lex')
 
+
         surfaces = []
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
@@ -202,6 +225,8 @@ def get_data(file_):
         nodes, ent_info_dict = process_triples(mtriples)
 
         lexs = e.getElementsByTagName('lex')
+        if e.getAttribute('eid') == 'Id106':
+            print()
 
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
@@ -229,7 +254,6 @@ def fuzzy_match_entity(ent_text, target_text):
         idx = target_text.find(new_ent_text)
         span_len = len(new_ent_text)
     else:
-        #ratio = fuzz.partial_ratio(ent_text, target_text)
         ent_token_lst = ent_text.split()
         if ',' in ent_token_lst:
             updated_ent_text_1 = ent_text.replace(',', ' ')
@@ -243,14 +267,17 @@ def fuzzy_match_entity(ent_text, target_text):
             ent_token_lst = updated_ent_text_2.split()
 
         target_token_lst = target_text.split()
-        M = len(ent_token_lst)
-        for pos in range(0, len(target_token_lst), M):
-            sub_target_text = ' '.join(target_token_lst[pos:(pos+M)])
+        step = len(ent_token_lst)
+        N = len(target_token_lst)
+        pos = 0
+        while (pos + step <= N):
+            sub_target_text = ' '.join(target_token_lst[pos:(pos+step)])
             score = fuzz.ratio(ent_text, sub_target_text)
-            if score >= 90:
+            if score >= 85:
                 idx = target_text.index(sub_target_text)
                 span_len = len(sub_target_text)
                 break
+            pos += 1
          
     return idx, span_len
 

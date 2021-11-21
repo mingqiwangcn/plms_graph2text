@@ -194,7 +194,7 @@ def get_data_dev_test(file_, train_cat, dataset):
             surfaces.append((template, new_doc.lower()))
         
         if len(surfaces) == 0:
-            print('No template found')
+            #print('No template found')
             global Ent_Not_found
             Ent_Not_found += 1
             continue
@@ -225,8 +225,8 @@ def get_data(file_):
         nodes, ent_info_dict = process_triples(mtriples)
 
         lexs = e.getElementsByTagName('lex')
-        if e.getAttribute('eid') == 'Id106':
-            print()
+        #if e.getAttribute('eid') == 'Id106':
+        #    print()
 
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()

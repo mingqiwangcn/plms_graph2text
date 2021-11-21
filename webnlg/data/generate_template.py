@@ -8,6 +8,8 @@ import re
 import unidecode
 import os
 from fuzzywuzzy import fuzz 
+import spacy
+from tqdm import tqdm
 
 folder = sys.argv[1]
 
@@ -48,11 +50,17 @@ def get_relation(n):
     n = "_".join(n)
     return n
 
+def text_preprocess(text):
+    doc = nlp(text)
+    new_text = ' '.join([a.text for a in doc])
+    return new_text 
+
 def process_triples(mtriples):
     rel_triple_lst = [] 
     for m in mtriples:
-        ms = m.firstChild.nodeValue
+        ms = text_preprocess(m.firstChild.nodeValue)
         ms = ms.strip().split(' | ')
+        assert(len(ms)) == 3
         n1 = ms[0]
         n2 = ms[2]
         nodes1 = get_nodes(n1)
@@ -151,9 +159,8 @@ def get_data_dev_test(file_, train_cat, dataset):
         surfaces = []
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
-            l = l.firstChild.nodeValue.strip()
-            l_tokens = l.split()
-            updated_l_text = ' '.join(l_tokens)
+            l_text = l.firstChild.nodeValue.strip()
+            updated_l_text = text_preprocess(l_text) 
             template = get_template_output(updated_l_text, ent_info_dict)
             if template is None:
                 continue
@@ -198,9 +205,8 @@ def get_data(file_):
 
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
-            l = l.firstChild.nodeValue.strip()
-            l_tokens = l.split()
-            updated_l_text = ' '.join(l_tokens)
+            l_text = l.firstChild.nodeValue.strip()
+            updated_l_text = text_preprocess(l_text)
             template = get_template_output(updated_l_text, ent_info_dict)
             if template is None:
                 continue
@@ -266,9 +272,13 @@ def get_template_output(target_text, ent_info_dict):
         out_text = out_text.replace(template_text, out_info_dict[template_text])
     return out_text
 
+global nlp
+
+nlp = spacy.load("en_core_web_sm")
+
 train_cat = set()
 dataset_points = []
-for d in datasets:
+for d in tqdm(datasets):
     cont_all = 0
     datapoints = []
     all_cats = set()
@@ -283,7 +293,7 @@ for d in datasets:
 
     files = sorted(list(files))
 
-    for idx, filename in enumerate(files):
+    for idx, filename in tqdm(enumerate(files), total=len(files)):
         #print(filename)
         filename = str(filename)
 

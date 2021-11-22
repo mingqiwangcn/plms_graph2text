@@ -21,7 +21,7 @@ export OMP_NUM_THREADS=10
 
 export CUDA_VISIBLE_DEVICES=${GPUID}
 #--n_test 20 \
-python -m pdb ${ROOT_DIR}/finetune.py \
+python ${ROOT_DIR}/finetune.py \
 --data_dir=${ROOT_DIR}/data/${DATASET}/${EXPT_NAME}/${DATA_PART} \
 --task graph2text \
 --model_name_or_path=${MODEL} \

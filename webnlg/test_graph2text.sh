@@ -7,7 +7,7 @@ CHECK_POINT=$2
 MODEL=$1
 DATASET=$4
 EXPT_NAME=$5
-DATA_PART=part_$6
+DATA_PART=$6
 FOLDER=outputs/test_model/${DATASET}/${EXPT_NAME}/${DATA_PART}
 
 export CURRENT_DIR=${ROOT_DIR}
@@ -21,8 +21,8 @@ export OMP_NUM_THREADS=10
 
 export CUDA_VISIBLE_DEVICES=${GPUID}
 #--n_test 20 \
-python ${ROOT_DIR}/finetune.py \
---data_dir=${ROOT_DIR}/data/webnlg/${DATASET}/${EXPT_NAME}/${DATA_PART} \
+python -m pdb ${ROOT_DIR}/finetune.py \
+--data_dir=${ROOT_DIR}/data/${DATASET}/${EXPT_NAME}/${DATA_PART} \
 --task graph2text \
 --model_name_or_path=${MODEL} \
 --eval_batch_size=8 \

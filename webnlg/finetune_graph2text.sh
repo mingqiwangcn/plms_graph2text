@@ -16,13 +16,12 @@ mkdir -p $OUTPUT_DIR
 
 export OMP_NUM_THREADS=10
 
-
 export CUDA_VISIBLE_DEVICES=${GPUID}
 
-python -m pdb ${ROOT_DIR}/finetune.py \
+python ${ROOT_DIR}/finetune.py \
 --data_dir=${ROOT_DIR}/data/webnlg \
 --learning_rate=3e-5 \
---num_train_epochs 100 \
+--num_train_epochs 20 \
 --task graph2text \
 --model_name_or_path=${MODEL} \
 --train_batch_size=8 \
@@ -36,4 +35,5 @@ python -m pdb ${ROOT_DIR}/finetune.py \
 --test_max_target_length=384 \
 --eval_max_gen_length=384 \
 --do_train --do_predict \
---eval_beams 3
+--eval_beams 3 \
+

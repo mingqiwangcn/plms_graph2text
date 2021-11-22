@@ -117,7 +117,7 @@ def triple2node(rel_triple_lst):
     ent_idx = 1
     ent_info_dict = {}
     for triple in rel_triple_lst:
-        nodes.append('<T>')
+        nodes.append('[T]')
         for key in ['sub', 'obj']:
             ent_src_text = ' '.join(triple[key]['tokens'])
             ent_text = ent_src_text.lower()
@@ -126,8 +126,8 @@ def triple2node(rel_triple_lst):
                 ent_idx += 1
             triple[key]['idx'] = ent_info_dict[ent_text]['ent_idx']
             tag_idx = triple[key]['idx']
-            triple[key]['start_tag'] = '<E%d>' % tag_idx
-            triple[key]['end_tag'] = '</E%d>' % tag_idx
+            triple[key]['start_tag'] = '[E%d]' % tag_idx
+            triple[key]['end_tag'] = '[/E%d]' % tag_idx
         
         sub = triple['sub']
         sub_toks = []
@@ -137,7 +137,7 @@ def triple2node(rel_triple_lst):
 
         rel = triple['rel']
         rel_toks = []
-        rel_toks.append('<R>')
+        rel_toks.append('[R]')
         rel_toks.extend(rel['tokens'])
         
         obj = triple['obj']
@@ -156,7 +156,6 @@ Ent_Not_found = 0
 Ent_Found = 0
 
 def get_data_dev_test(file_, train_cat, dataset):
-
     datapoints = []
     cats = set()
 
@@ -178,7 +177,6 @@ def get_data_dev_test(file_, train_cat, dataset):
 
         lexs = e.getElementsByTagName('lex')
 
-
         surfaces = []
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
@@ -191,7 +189,7 @@ def get_data_dev_test(file_, train_cat, dataset):
             new_doc = ' '.join(new_doc.split())
             # new_doc = tokenizer.tokenize(new_doc)
             # new_doc = ' '.join(new_doc)
-            surfaces.append((template, new_doc.lower()))
+            surfaces.append((template, template.lower()))
         
         if len(surfaces) == 0:
             #print('No template found')
@@ -207,9 +205,7 @@ def get_data_dev_test(file_, train_cat, dataset):
     return datapoints, cats, cont
 
 def get_data(file_):
-
     datapoints = []
-
     cats = set()
 
     xmldoc = minidom.parse(file_)
@@ -225,8 +221,6 @@ def get_data(file_):
         nodes, ent_info_dict = process_triples(mtriples)
 
         lexs = e.getElementsByTagName('lex')
-        #if e.getAttribute('eid') == 'Id106':
-        #    print()
 
         for l in lexs:
             #l = l.firstChild.nodeValue.strip().lower()
@@ -239,7 +233,7 @@ def get_data(file_):
             new_doc = ' '.join(template.split())
             #new_doc = tokenizer.tokenize(new_doc)
             #new_doc = ' '.join(new_doc)
-            datapoints.append((nodes, (template, new_doc.lower())))
+            datapoints.append((nodes, (template, template.lower())))
 
     return datapoints, cats, cont
 
@@ -301,8 +295,8 @@ def get_template_output(target_text, ent_info_dict):
         out_ent = out_text[idx:(idx+span_len)]
         ent_to_replace = out_ent
          
-        template_text = '<E%d></E%d>' % (ent_idx, ent_idx)
-        out_info_dict[template_text] = '<E%d> %s </E%d>' % (ent_idx, ent_info_dict[ent_text]['text'], ent_idx)
+        template_text = '[E%d][/E%d]' % (ent_idx, ent_idx)
+        out_info_dict[template_text] = '[E%d] %s [/E%d]' % (ent_idx, ent_info_dict[ent_text]['text'], ent_idx)
         to_replaced = re.compile(re.escape(ent_to_replace), re.IGNORECASE)
         out_text = to_replaced.sub(template_text, out_text)
     
@@ -420,18 +414,7 @@ for idx, datapoints in enumerate(dataset_points):
             f.write('\n'.join(surfaces_3_eval))
             f.write('\n')
 
-        path_c = os.path.dirname(os.path.realpath(__file__))
-        os.system("python " + path_c + '/' + "convert_files_crf.py " + path + '/' + part)
-        os.system("python " + path_c + '/' + "convert_files_meteor.py " + path + '/' + part)
-
 print('Ent_Not_found %d, Ent_Found %d' % (Ent_Not_found, Ent_Found))
-
-
-
-
-
-
-
 
 
 

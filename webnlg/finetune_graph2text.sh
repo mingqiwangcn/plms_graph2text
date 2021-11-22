@@ -19,14 +19,14 @@ export OMP_NUM_THREADS=10
 
 export CUDA_VISIBLE_DEVICES=${GPUID}
 
-python ${ROOT_DIR}/finetune.py \
+python -m pdb ${ROOT_DIR}/finetune.py \
 --data_dir=${ROOT_DIR}/data/webnlg \
 --learning_rate=3e-5 \
 --num_train_epochs 100 \
 --task graph2text \
 --model_name_or_path=${MODEL} \
---train_batch_size=4 \
---eval_batch_size=4 \
+--train_batch_size=8 \
+--eval_batch_size=8 \
 --early_stopping_patience 15 \
 --gpus 1 \
 --output_dir=$OUTPUT_DIR \

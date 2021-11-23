@@ -6,4 +6,4 @@ GitPython==3.1.18
 rouge-score==0.0.4
 sacrebleu==1.5.1
 gnureadline
-spacy
+spacy==2.1.8

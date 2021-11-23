@@ -214,8 +214,8 @@ class SummarizationModule(BaseTransformer):
             # write predictions and targets for later rouge evaluation.
             with open(output_test_predictions_file, "w") as p_writer, open(output_test_targets_file, "w") as t_writer:
                 for output_batch in outputs:
-                    p_writer.writelines(convert_text(s) + "\n" for s in output_batch["preds"])
-                    t_writer.writelines(convert_text(s) + "\n" for s in output_batch["target"])
+                    p_writer.writelines(s + "\n" for s in output_batch["preds"])
+                    t_writer.writelines(s + "\n" for s in output_batch["target"])
                 p_writer.close()
                 t_writer.close()
 
@@ -235,7 +235,7 @@ class SummarizationModule(BaseTransformer):
             }
 
             generative_metrics['bleu'] = bleu_info
-
+            
             metric_val = (
                 generative_metrics[self.val_metric] if self.val_metric in generative_metrics else losses[
                     self.val_metric]
@@ -389,8 +389,8 @@ class SummarizationModule(BaseTransformer):
             with open(output_test_predictions_file, "w") as p_writer, open(output_test_targets_file, "w") as t_writer:
                 for output_batch in outputs:
 
-                    p_writer.writelines(convert_text(s) + "\n" for s in output_batch["preds"])
-                    t_writer.writelines(convert_text(s) + "\n" for s in output_batch["target"])
+                    p_writer.writelines(s + "\n" for s in output_batch["preds"])
+                    t_writer.writelines(s + "\n" for s in output_batch["target"])
                 p_writer.close()
                 t_writer.close()
             

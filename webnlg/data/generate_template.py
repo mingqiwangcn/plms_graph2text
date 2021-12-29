@@ -284,7 +284,7 @@ def fuzzy_match_entity(ent_text, target_text):
 def get_entity_tags(role):
     if role == 'sub':
         return (TemplateTag.Subject_Start, TemplateTag.Subject_End)
-    elif role == 'obj'
+    elif role == 'obj':
         return (TemplateTag.Object_Start, TemplateTag.Object_End)
     else:
         raise ValueError('No supported role [%s]' % role)
@@ -309,7 +309,7 @@ def get_template_output(target_text, ent_info_dict):
         out_ent = out_text[idx:(idx+span_len)]
         ent_to_replace = out_ent
          
-        template_text = '<e_n_t_%d></e_n_t_%d>' % (ent_idx, ent_idx)
+        template_text = '[e_n_t_%d][/e_n_t_%d]' % (ent_idx, ent_idx)
         start_tag, end_tag = get_entity_tags(role)
         out_info_dict[template_text] = '%s %s %s' % (start_tag, ent_info_dict[ent_text]['text'], end_tag)
         to_replaced = re.compile(re.escape(ent_to_replace), re.IGNORECASE)

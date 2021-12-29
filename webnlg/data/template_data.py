@@ -18,3 +18,5 @@ class TemplateTag:
     object_tag = 'O-B-J'
     Object_Start = '[%s]' % object_tag
     Object_End = '[/%s]' % object_tag
+
+    Meta_Tags = [Para_Start, Para_End, Rel_Start, Rel_End, Triple_Start, Triple_End]

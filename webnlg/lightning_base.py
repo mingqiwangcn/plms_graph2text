@@ -7,6 +7,7 @@ import sys
 import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.callbacks import LearningRateLogger
+from webnlg.data.template_data import TemplateTag
 
 from transformers import (
     AdamW,
@@ -100,7 +101,8 @@ class BaseTransformer(pl.LightningModule):
                 self.hparams.tokenizer_name if self.hparams.tokenizer_name else self.hparams.model_name_or_path,
                 cache_dir=cache_dir,
             )
-            new_tokens = ['<H>', '<R>', '<T>']
+            #new_tokens = ['<H>', '<R>', '<T>']
+            new_tokens = TemplateTag.Meta_Tags
             new_tokens_vocab = {}
             new_tokens_vocab['additional_special_tokens'] = []
             for idx, t in enumerate(new_tokens):

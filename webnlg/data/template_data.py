@@ -20,3 +20,16 @@ class TemplateTag:
     Object_End = '[/%s]' % object_tag
 
     Meta_Tags = [Para_Start, Para_End, Rel_Start, Rel_End, Triple_Start, Triple_End]
+
+    @staticmethod
+    def get_annotated_triple(sub, rel, obj):
+        out_triple = (
+                f'{TemplateTag.Para_Start} ' 
+                f'{TemplateTag.Triple_Start} '
+                f'{TemplateTag.Subject_Start} {sub} {TemplateTag.Subject_End} '
+                f'{TemplateTag.Rel_Start} {rel} {TemplateTag.Rel_End} '
+                f'{TemplateTag.Object_Start} {obj} {TemplateTag.Object_End} '
+                f'{TemplateTag.Triple_End} '
+                f'{TemplateTag.Para_End}'
+        )
+        return out_triple

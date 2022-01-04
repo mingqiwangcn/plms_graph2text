@@ -18,14 +18,12 @@ mkdir -p $OUTPUT_DIR
 
 export OMP_NUM_THREADS=10
 
-
 export CUDA_VISIBLE_DEVICES=${GPUID}
-#--n_test 20 \
 python ${ROOT_DIR}/finetune.py \
 --data_dir=${ROOT_DIR}/data/${DATASET}/${EXPT_NAME}/${DATA_PART} \
 --task graph2text \
 --model_name_or_path=${MODEL} \
---eval_batch_size=8 \
+--eval_batch_size=20 \
 --gpus 1 \
 --output_dir=$OUTPUT_DIR \
 --checkpoint=$CHECK_POINT \

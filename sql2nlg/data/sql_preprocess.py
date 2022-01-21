@@ -1,6 +1,7 @@
 import json
 from sql_data import SqlQuery
 from tqdm import tqdm
+import re
 
 def read_tables(table_file):
     table_dict = {}
@@ -11,33 +12,52 @@ def read_tables(table_file):
             table_dict[table_id] = item
     return table_dict
 
-def process(sql_file, table_file, out_dir):
-    out_src_file = out_dir + '/source.txt'
-    out_tgt_file = out_dir + '/target.txt'
-
-    f_o_src = open(out_src_file, 'w')
-    f_o_tgt = open(out_tgt_file, 'w')
-
+def process(mode, sql_file, table_file, out_dir):
+    out_data = []
     table_dict = read_tables(table_file)
     with open(sql_file) as f:
-        #row = -1
         for line in tqdm(f):
-            #row += 1
-            #print('\nrow=%d' % row)
             item = json.loads(line)
             table_id = item['table_id']
             table_info = table_dict[table_id]
             question = item['question']
             sql_info = item['sql'] 
             sql_text = get_sql_text(table_info, sql_info)
-            if len(sql_info['conds']) > 1:
-                print()
-            
-            f_o_src.write(sql_text + '\n')
-            f_o_tgt.write(question + '\n')
+            out_item = {
+                'sql_text':sql_text,
+                'question':question
+            }
+            out_data.append(out_item)
+    
+    write_out_data(mode, out_dir, out_data)
+     
+def write_out_data(mode, out_dir, out_data):
+    mode_part_name = mode
+    if mode == 'dev':
+        mode_part_name = 'val'
+
+    src_file = out_dir + '/' + '%s.source' % mode_part_name
+    tgt_file = out_dir + '/' + '%s.target' % mode_part_name
+    tgt_eval_file = out_dir + '/' + '%s.target_eval' % mode_part_name
+    
+    f_o_src = open(src_file, 'w')
+    f_o_tgt = open(tgt_file, 'w')
+    f_o_tgt_eval = open(tgt_eval_file, 'w')
+    
+    for out_item in out_data:
+        sql_text = out_item['sql_text']
+        question = out_item['question']
+        f_o_src.write(sql_text + '\n')
+        f_o_tgt.write(question + '\n')
+        
+        eval_question = ' '.join(re.split('(\W)', question))
+        eval_question = ' '.join(eval_question.split())
+        eval_question = eval_question.lower()
+        f_o_tgt_eval.write(eval_question + '\n')
     
     f_o_src.close()
     f_o_tgt.close()
+    f_o_tgt_eval.close()     
 
 def get_sql_text(table_info, sql_info):
     sel_col_idx = sql_info['sel']
@@ -79,8 +99,9 @@ def get_files(mode):
     return sql_file, table_file
 
 def main():
-    train_sql_file, train_table_file = get_files('train')
-    process(train_sql_file, train_table_file, './output') 
+    for mode in ['train', 'dev']:
+        train_sql_file, train_table_file = get_files(mode)
+        process(mode, train_sql_file, train_table_file, './output') 
 
 
 if __name__ == '__main__':

@@ -40,7 +40,7 @@ from utils import (
     use_task_specific_params,
 )
 
-from utils_graph2text import convert_text, eval_meteor, eval_bleu, eval_chrf, eval_meteor_test_webnlg, eval_chrf_test_webnlg
+from utils_sql2nlg import convert_text, eval_meteor, eval_bleu, eval_chrf, eval_meteor_test_webnlg, eval_chrf_test_webnlg
 
 # need the parent dir module
 sys.path.insert(2, str(Path(__file__).resolve().parents[1]))

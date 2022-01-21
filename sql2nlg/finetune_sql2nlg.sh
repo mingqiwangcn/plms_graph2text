@@ -19,7 +19,7 @@ export OMP_NUM_THREADS=10
 export CUDA_VISIBLE_DEVICES=${GPUID}
 
 python ${ROOT_DIR}/finetune.py \
---data_dir=${ROOT_DIR}/data/webnlg \
+--data_dir=${ROOT_DIR}/data/sql2nlg \
 --learning_rate=3e-5 \
 --num_train_epochs 20 \
 --task graph2text \

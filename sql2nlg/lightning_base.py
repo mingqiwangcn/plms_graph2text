@@ -7,7 +7,7 @@ import sys
 import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.callbacks import LearningRateLogger
-from webnlg.data.template_data import TemplateTag
+from sql2nlg.data.sql_data import SqlQuery
 
 from transformers import (
     AdamW,
@@ -102,7 +102,7 @@ class BaseTransformer(pl.LightningModule):
                 cache_dir=cache_dir,
             )
             #new_tokens = ['<H>', '<R>', '<T>']
-            new_tokens = TemplateTag.Meta_Tags
+            new_tokens = SqlQuery.get_meta_tags()
             new_tokens_vocab = {}
             new_tokens_vocab['additional_special_tokens'] = []
             for idx, t in enumerate(new_tokens):

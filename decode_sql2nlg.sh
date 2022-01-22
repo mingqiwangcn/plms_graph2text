@@ -6,10 +6,10 @@ if [ "$#" -lt 6 ]; then
 fi
 
 if [[ ${1} == *"bart"* ]]; then
-  bash sql2nlg/test_graph2text_bart.sh ${1} ${2} ${3}
+  bash sql2nlg/test_sql2nlg_bart.sh ${1} ${2} ${3}
 fi
 if [[ ${1} == *"t5"* ]]; then
-  bash sql2nlg/test_graph2text.sh ${1} ${2} ${3} ${4} ${5} ${6}
+  bash sql2nlg/test_sql2nlg.sh ${1} ${2} ${3} ${4} ${5} ${6}
 fi
 
 

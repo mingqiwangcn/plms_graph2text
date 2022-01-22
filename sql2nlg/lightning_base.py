@@ -7,7 +7,7 @@ import sys
 import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.callbacks import LearningRateLogger
-from sql2nlg.data.sql_data import SqlQuery
+from table2question.sql_data import SqlQuery
 
 from transformers import (
     AdamW,

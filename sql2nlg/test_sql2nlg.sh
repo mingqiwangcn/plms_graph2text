@@ -13,9 +13,6 @@ FOLDER=outputs/test_model/${DATASET}/${EXPT_NAME}/${DATA_PART}
 export CURRENT_DIR=${ROOT_DIR}
 export OUTPUT_DIR=${CURRENT_DIR}/${FOLDER}
 
-rm -rf $OUTPUT_DIR
-mkdir -p $OUTPUT_DIR
-
 export OMP_NUM_THREADS=10
 
 export CUDA_VISIBLE_DEVICES=${GPUID}

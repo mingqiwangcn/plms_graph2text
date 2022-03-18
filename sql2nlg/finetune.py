@@ -573,8 +573,7 @@ def main(args, model=None) -> SummarizationModule:
     if os.path.exists(args.output_dir): #and args.do_train:
         print("Output directory ({}) already exists and is not empty.".format(args.output_dir))
         return
-
-    Path(args.output_dir).mkdir(exist_ok=True)
+    os.makedirs(args.output_dir)
     if model is None:
         if "summarization" in args.task:
             model: SummarizationModule = SummarizationModule(args)

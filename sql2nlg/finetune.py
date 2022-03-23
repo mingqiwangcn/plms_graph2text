@@ -571,7 +571,7 @@ class Graph2TextModule(SummarizationModule):
 def main(args, model=None) -> SummarizationModule:
     t1 = time.time()
     if os.path.exists(args.output_dir): #and args.do_train:
-        print("Output directory ({}) already exists and is not empty.".format(args.output_dir))
+        print("Output directory ({}) already exists.".format(args.output_dir))
         return
     os.makedirs(args.output_dir)
     if model is None:
